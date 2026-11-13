@@ -18,7 +18,7 @@
 
 $d[u][i]$ 表示从 $fa_u$ 遍历了除了 $u$ 以外的其他子树并一共经过 $i$ 个节点的方案数，则 $\displaystyle ans[u][i]=\sum_{j=1}^{i-1}{ans[fa_u][j]\times d[u][i-j-1]}$，即枚举 $j$，在 dfs 序的第 $j$ 个位置到达 $fa_u$ 的方案数乘上遍历 $fa_u$ 除 $u$ 外其他子树共 $i-j-1$ 个节点的方案数，就得到在第 $i$ 个位置到达 $u$ 的方案数。
 
-由于需要考虑子树之间的排列问题，$d[u][i]$ 无法直接转移。创建一个辅助数组 $dp[i][j]$ 表示$fa_u$ 在排除 $u$ 的情况下选择遍历了 $i$ 个子树并且一共访问了 $j$ 个节点。对于 $fa_u$ 的非 $u$ 子节点 $v$，考虑选或者不选 $v$ 的情况，有转移 $dp[i][j]=dp'[i][j]+dp'[i-1][j-siz_v]\times f[v]$。套用退背包的模版，先不排除任何数求出最终的 $dp$ 数组，对于将要排除的节点 $u$，$dp'[i][j]=dp[i][j]-dp'[i-1][j-siz_v]\times f[v]$。最后 $\displaystyle d[u][i]=\sum_{j=1}^{\left|son_v\right|}{dp'[j][i]\times j!}$。
+由于需要考虑子树之间的排列问题，$d[u][i]$ 无法直接转移。创建一个辅助数组 $dp[i][j]$ 表示$fa_u$ 在排除 $u$ 的情况下选择遍历了 $i$ 个子树并且一共访问了 $j$ 个节点。对于 $fa_u$ 的非 $u$ 子节点 $v$，考虑选或者不选 $v$ 的情况，有转移 $dp[i][j]=dp'[i][j]+dp'[i-1][j-siz_v]\times f[v]$。套用退背包的模版，先不排除任何数求出最终的 $dp$ 数组，对于将要排除的节点 $u$，$dp'[i][j]=dp[i][j]-dp'[i-1][j-siz_v]\times f[v]$，初始状态 $dp[0][0] = 1$。最后 $\displaystyle d[u][i]=\sum_{j=1}^{\left|son_fa_u\right|}{dp'[j][i]\times j!}$。
 
 #### 错因一
 
@@ -26,4 +26,4 @@ $d[u][i]$ 表示从 $fa_u$ 遍历了除了 $u$ 以外的其他子树并一共经
 
 #### 思路二
 
-改进思路一，主要在于
+改进思路一，主要在于统计到达 $u$ 后剩余的未访问节点的方案数，那么对于每个在 dfs 序为 $i$ 到达节点 $u$ 的方案，其贡献为剩余节点的可能的 dfs 序的数量（思路一的贡献为 $1$）。由于 $u$ 由其父亲转移过来，我们回头看一下父亲节点 $fa_u$ 在抵达节点 $u$ 后剩余的方案数，假设 $S_u$ 为访问到节点 $u$ 时未被遍历的兄弟节点，则 $fa_u$ 的剩余节点对 $u$ 的当前方案的贡献为 $\displaystyle \left|S_u\right|!\times\prod_{v\in S_u}{f[v]}$。记 $ANS[u][i]$ 为不考虑 $u$ 的子树的方案数，则 $ans[u][i]=ANS[u][i]\times f[u]$，这里 $ans[u][i]$ 为真正的总方案数，$\displaystyle ANS[u][i]=\sum_{j=1}^{i-1}{ANS[fa_u][j]\times d[u][i-j-1]}$，这里继承了祖先节点的方案数，$dp$ 数组每加入 $v$，就要加上到达 $u$ 时节点 $v$ 产生的系数，也要减去 $v$ 对 $u$ 产生的剩余方案的系数，即 $\displaystyle dp[i][j]=dp'[i][j]+dp'[i-1][j-siz_v]\times f[v]\times \frac{1}{f[v]}=dp'[i][j]+dp'[i-1][j-siz_v]$，初始状态 $\displaystyle dp[0][0]=\sum_{v\in fa_u}{f[v]}$，转移至 $d$ 数组时要算上 $fa_u$ 剩余节点的排列，并去掉 $u$ 的方案数 $f[u]$，即 $\displaystyle d[u][i]=\sum_{j=1}^{\left|son_{fa_u}\right|}{dp'[j][i]\times j!\times(\left|son_{fa_u}\right|-j-1)!\times\frac{1}{f[u]}}$。
