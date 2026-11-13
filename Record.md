@@ -28,13 +28,13 @@ $$
 
 设 $u$ 为 $v$ 的父亲节点。
 
-记 $(u,v)$ 的偏移量为 $u$ 节点与 $v$ 节点的 DFS 序之差减一，$\varDelta s = dfn[u]-dfn[v]-1$，即表示抵达 $u$ 节点后遍历了其余多少节点后才遍历到 $v$，也就是在 $v$ 前被访问的兄弟节点 $w$ 的子树大小和。
+记 $(u,v)$ 的偏移量为抵达 $u$ 节点后遍历了其余多少节点后才遍历到 $v$，也就是在 $v$ 前被访问的兄弟节点 $w$ 的子树大小和。
 
 $d[v][i]$ 表示以 $u$ 为根，$u$ 与 $v$ 偏移量为 $i$ 的方案数，不含 $v$ 内部节点方案数。
 
-用 $dp[i][j]$ 辅助转移，表示以 $u$ 为根，已经选择了 $i$ 个子节点遍历，且子树大小和为 $j$。初始状态 $\displaystyle dp[0][0]=\prod_{v \in son(u)}{f[v]}$。
+用 $dp[i][j]$ 辅助转移，表示以 $u$ 为根，已经选择了 $i$ 个子节点遍历，且子树大小和为 $j$。初始状态 $\displaystyle dp[0][0]=\prod_{v \in S(u)}{f[v]}$。
 
-对于所有 $v\in son(u)$
+对于所有 $v\in S(u)$
 
 $$
 dp[i][j]\gets dp[i][j]+dp[i-1][j-siz[v]]
@@ -49,7 +49,7 @@ $$
 计算 $d[v][i]$
 
 $$
-d[v][i] = \sum_{j=0}^{\left|son(u)\right|-1}{odp[j][i]}\cdot j!\cdot \left(\left|son(u)-j-1\right|\right)!\cdot f[v]^{-1}
+d[v][i] = \sum_{j=0}^{\left|S(u)\right|-1}{odp[j][i]}\cdot j!\cdot \left(\left|S(u)\right|-j-1\right)!\cdot f[v]^{-1}
 $$
 
 ##### 3. 自顶向下求 $g$
