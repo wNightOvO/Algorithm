@@ -10,20 +10,75 @@
 **退背包（可撤销背包）**、复杂树上计数问题。
 
 #### 题目大意
-给出一棵 $n(1\le n\le 500)$ 的树，以 $1$ 为根节点遍历整棵树得到 dfs 序，每个节点的子节点可以以任意顺序访问，所以有多种可能的 dfs 序。对于每个节点，求节点 $u$ 在 dfs 序中处于第 $j(1\le j\le n)$ 个位置的 dfs 的数量，对 $998244353$ 取模。
+给出一棵 $n(1\le n\le 500)$ 的树，以 $1$ 为根节点遍历整棵树得到 DFS 序，每个节点的子节点可以以任意顺序访问，所以有多种可能的 DFS 序。对于每个节点，求节点 $u$ 在 DFS 序中处于第 $j(1\le j\le n)$ 个位置的 DFS 的数量，对 $998244353$ 取模。
 
-#### 思路一
+#### 思路
 
-记 $ans[u][i]$ 为最终答案。$f[u]$ 为以节点 $u$ 为根的子树的 dfs 序的个数，转移式子 $\displaystyle f[u]=\left|son_u\right|!\times \prod_{v\in son_u}{f[v]}$。
+##### 1. 子树信息
 
-$d[u][i]$ 表示从 $fa_u$ 遍历了除了 $u$ 以外的其他子树并一共经过 $i$ 个节点的方案数，则 $\displaystyle ans[u][i]=\sum_{j=1}^{i-1}{ans[fa_u][j]\times d[u][i-j-1]}$，即枚举 $j$，在 dfs 序的第 $j$ 个位置到达 $fa_u$ 的方案数乘上遍历 $fa_u$ 除 $u$ 外其他子树共 $i-j-1$ 个节点的方案数，就得到在第 $i$ 个位置到达 $u$ 的方案数。
+$siz[u]$ 为子树大小，$fa[u]$ 为父亲节点，$S(u)$ 为 $u$ 的子节点的集合，$dfn[u]$ 为 $u$ 节点的 DFS 序。
 
-由于需要考虑子树之间的排列问题，$d[u][i]$ 无法直接转移。创建一个辅助数组 $dp[i][j]$ 表示$fa_u$ 在排除 $u$ 的情况下选择遍历了 $i$ 个子树并且一共访问了 $j$ 个节点。对于 $fa_u$ 的非 $u$ 子节点 $v$，考虑选或者不选 $v$ 的情况，有转移 $dp[i][j]=dp'[i][j]+dp'[i-1][j-siz_v]\times f[v]$。套用退背包的模版，先不排除任何数求出最终的 $dp$ 数组，对于将要排除的节点 $u$，$dp'[i][j]=dp[i][j]-dp'[i-1][j-siz_v]\times f[v]$，初始状态 $dp[0][0] = 1$。最后 $\displaystyle d[u][i]=\sum_{j=1}^{\left|son_fa_u\right|}{dp'[j][i]\times j!}$。
+$f[u]$ 为子树 $u$ 内部的 DFS 序数。
 
-#### 错因一
+$$
+f[u]=\left|S(u)\right|!\prod_{v\in S(u)}{f[v]}
+$$
 
-上面方法考虑的 $ans[u][i]$ 并不是真正的答案，而是只考虑了 dfs 为 $i$ 时到达节点 $u$ 的方案数，并没有考虑到达 $u$ 后剩余未访问节点的方案数。
+##### 2.偏移量
 
-#### 思路二
+记 $fa[u]$ 节点与 $u$ 节点的 DFS 序之差减一，$\varDelta s = dfn[fa[u]]-dfn[u]-1$，即表示抵达 $fa[u]$ 节点后遍历了其余多少节点后才遍历到 $u$，也就是在 $u$ 前被访问的兄弟节点 $v$ 的子树大小和。
 
-改进思路一，主要在于统计到达 $u$ 后剩余的未访问节点的方案数，那么对于每个在 dfs 序为 $i$ 到达节点 $u$ 的方案，其贡献为剩余节点的可能的 dfs 序的数量（思路一的贡献为 $1$）。由于 $u$ 由其父亲转移过来，我们回头看一下父亲节点 $fa_u$ 在抵达节点 $u$ 后剩余的方案数，假设 $S_u$ 为访问到节点 $u$ 时未被遍历的兄弟节点，则 $fa_u$ 的剩余节点对 $u$ 的当前方案的贡献为 $\displaystyle \left|S_u\right|!\times\prod_{v\in S_u}{f[v]}$。记 $ANS[u][i]$ 为不考虑 $u$ 的子树的方案数，则 $ans[u][i]=ANS[u][i]\times f[u]$，这里 $ans[u][i]$ 为真正的总方案数，$\displaystyle ANS[u][i]=\sum_{j=1}^{i-1}{ANS[fa_u][j]\times d[u][i-j-1]}$，这里继承了祖先节点的方案数，$dp$ 数组每加入 $v$，就要加上到达 $u$ 时节点 $v$ 产生的系数，也要减去 $v$ 对 $u$ 产生的剩余方案的系数，即 $\displaystyle dp[i][j]=dp'[i][j]+dp'[i-1][j-siz_v]\times f[v]\times \frac{1}{f[v]}=dp'[i][j]+dp'[i-1][j-siz_v]$，初始状态 $\displaystyle dp[0][0]=\sum_{v\in fa_u}{f[v]}$，转移至 $d$ 数组时要算上 $fa_u$ 剩余节点的排列，并去掉 $u$ 的方案数 $f[u]$，即 $\displaystyle d[u][i]=\sum_{j=1}^{\left|son_{fa_u}\right|}{dp'[j][i]\times j!\times(\left|son_{fa_u}\right|-j-1)!\times\frac{1}{f[u]}}$。
+$d[u][i]$ 表示以 $fa[u]$ 为根，$fa[u]$ 与 $u$ 偏移量为 $i$ 的方案数，不含 $u$ 内部节点方案数。
+
+以下用 $(u, v)$ 代替 $(fa[u], u)$。
+
+用 $dp[i][j]$ 辅助转移，表示以 $u$ 为根，已经选择了 $i$ 个子节点遍历，且子树大小和为 $j$。初始状态 $\displaystyle dp[0][0]=\prod_{v \in son(u)}{f[v]}$。
+
+对于所有 $v\in son(u)$
+
+$$
+dp[i][j]\gets dp[i][j]+dp[i-1][j-siz[v]]
+$$
+
+用退背包去掉 $v$
+
+$$
+odp[i][j]\gets dp[i][j]-odp[i-1][j-siz[v]]
+$$
+
+计算 $d[v][i]$
+
+$$
+d[v][i] = \sum_{j=0}^{\left|son(u)\right|-1}{odp[j][i]}\cdot j!\cdot \left(\left|son(u)-j-1\right|\right)!\cdot f[v]^{-1}
+$$
+
+##### 3. 自顶向下求 $g$
+
+$g[u][i]$ 为节点 $u$ 且 DFS 序在第 $i$ 位的 DFS 序数，不考虑 $u$ 子树内的 DFS 序数。
+
+初始 $g[1][1]=1$，即节点 $1$ 第一个访问，不考虑子树时方案只有 $1$。
+
+$v$ 为 $u$ 的子节点。
+
+$$
+g[v][i] = \sum_{j=1}^{i-1}{g[u][j]\cdot d[v][i-j-1]}
+$$
+
+##### 4. 最终答案
+
+$ans[u][i]$ 为最终 DFS 序数。$g[u][i]$ 考虑子树方案后即可求得。
+
+$$
+ans[u][i]=g[u][i]\cdot f[u]
+$$
+
+#### 复杂度
+
+空间复杂度 $O(n^2)$。
+
+时间复杂度 $O(n^3)$。
+
+#### 易错点
+
+- DFS 序数只考虑节点 $u$ DFS 序为 $i$ 时，从根节点到 $u$ 的 DFS 序数，没有考虑 $u$ 到剩余节点的 DFS 序数。
+- 如果 $g[u][i]$ 考虑了子树 DFS 序数，就会导致继承了子树信息多计数。
