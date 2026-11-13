@@ -964,9 +964,6 @@ int main () {
 
 ## 动态规划
 
-### [P9669 [ICPC 2022 Jinan R] DFS Order 2 - 洛谷](https://www.luogu.com.cn/problem/P9669)
-
-
 ### [2026 省选模拟赛 Day 3 #A. 直方图](https://newoj.daimayuan.top/p/P4485?tid=694912d3d27d9bf7b2533eb9)
 
 笛卡尔树上 dp 好题。
