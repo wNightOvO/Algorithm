@@ -1,0 +1,204 @@
+{
+  "main": {
+    "id": "370545471653b10d",
+    "type": "split",
+    "children": [
+      {
+        "id": "21ecec0aed3536ee",
+        "type": "tabs",
+        "dimension": 71.47651006711409,
+        "children": [
+          {
+            "id": "6ec87951f3aa2261",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Algorithm.md",
+                "mode": "preview",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Algorithm"
+            },
+            "group": "dda9e649cf36da9e"
+          }
+        ]
+      },
+      {
+        "id": "76ef330026fe0b76",
+        "type": "tabs",
+        "dimension": 28.523489932885905,
+        "children": [
+          {
+            "id": "4f38b8e8a24bba44",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Algorithm.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Algorithm 的大纲"
+            },
+            "group": "dda9e649cf36da9e"
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "fdb62cd585febeff",
+    "type": "split",
+    "children": [
+      {
+        "id": "6078d92c72b207ba",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b076924f358b5ba2",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-folder-closed",
+              "title": "文件列表"
+            }
+          },
+          {
+            "id": "82f1ed6711455dc5",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "搜索"
+            }
+          },
+          {
+            "id": "f7dbf0766c35558e",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "书签"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "58a47d8257aee306",
+    "type": "split",
+    "children": [
+      {
+        "id": "03edce8bac14e0d4",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b7a33fb6c5f2c57d",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Algorithm.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Algorithm 的反向链接列表"
+            }
+          },
+          {
+            "id": "4afd3b6ee5aeb93c",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Algorithm.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Algorithm 的出链列表"
+            }
+          },
+          {
+            "id": "9be9813b38e07e5f",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "标签"
+            }
+          },
+          {
+            "id": "44dec736fa9b4c8b",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Algorithm.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Algorithm 的大纲"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "bases:新建数据库": false,
+      "switcher:打开快速切换": false,
+      "graph:查看关系图谱": false,
+      "canvas:新建白板": false,
+      "daily-notes:打开/创建今天的日记": false,
+      "templates:插入模板": false,
+      "command-palette:打开命令面板": false
+    }
+  },
+  "active": "6ec87951f3aa2261",
+  "lastOpenFiles": [
+    "新建文本文档.txt",
+    "Algorithm.md"
+  ]
+}
