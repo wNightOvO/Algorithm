@@ -24,7 +24,7 @@ $$
 f[u]=\left|S(u)\right|!\prod_{v\in S(u)}{f[v]}
 $$
 
-##### 2.偏移量
+##### 2. 偏移量
 
 设 $u$ 为 $v$ 的父亲节点。
 
@@ -37,7 +37,7 @@ $d[v][i]$ 表示以 $u$ 为根，$u$ 与 $v$ 偏移量为 $i$ 的方案数，不
 对于所有 $v\in S(u)$
 
 $$
-dp[i][j]\gets dp[i][j]+dp[i-1][j-siz[v]]
+dp[i][j]\gets dp'[i][j]+dp'[i-1][j-siz[v]]
 $$
 
 用退背包去掉 $v$
@@ -82,3 +82,122 @@ $$
 
 - DFS 序数只考虑节点 $u$ DFS 序为 $i$ 时，从根节点到 $u$ 的 DFS 序数，没有考虑 $u$ 到剩余节点的 DFS 序数。
 - 如果 $g[u][i]$ 考虑了子树 DFS 序数，就会导致继承了子树信息多计数。
+
+### [P15649 [省选联考 2026] 找寻者](https://www.luogu.com.cn/problem/P15649)
+
+提交记录：[R309893461](https://www.luogu.com.cn/record/309893461)。
+
+#### 关键算法
+退背包（可撤销背包）、概率与期望 dp、树上背包。
+
+#### 题目大意
+
+给定一棵以 $1$ 为根，大小为 $n(1\le n\le 500)$ 的树。在树上自底向上进行随机链剖分，一条重链的长度定义为其包含的节点数量。对于非叶子节点 $u$，递归确定其所有子节点后，设其子节点分别为 $v_1,v_2,\cdots,v_k$，它们各自所在重链长度分别为 $l_1,l_2,\cdots,l_k$，则 $u$ 选择节点 $v_i$ 为其重儿子的概率为 $\displaystyle \frac{l_i}{\sum_{j=1}^k{l_j}}$。
+
+求每个节点 $x$ 到根节点 $1$ 简单路径上经过轻边数量的期望之和，对 $998244353$ 取模。
+
+#### 思路
+
+##### 1. 子树信息
+
+$siz[u]$，$fa[u]$，$S(u)$ 表示节点 $u$ 的子节点的集合，$h[u]$ 表示以 $u$ 为根的子树从 $u$ 到叶子节点的最长路径包含的节点数（包括 $u$ 本身），$sh[u]$ 为 $u$ 的所有子节点 $v$ 的 $h[v]$ 之和。
+
+##### 2. 转化题目
+
+难以直接统计。考虑把点的贡献转化为边的贡献，对于一条边 $(u,v)$，$u$ 是 $v$ 的父亲节点，设 $P(u,v)$ 为这一条边为重边的概率，则这一条边的贡献为 $\displaystyle \left(1-P\left(u,v\right)\right)\cdot siz[v]$。
+
+##### 3. 设计状态并转移
+
+$p[u][l]$ 为以 $u$ 为根的子树并且 $u$ 所在重链长度为 $l$ 时的概率，$q[u][L]$ 为 $u$ 的兄弟节点 $v$ 的 $h[v]$ 之和为 $L$ 的概率。
+
+对 $q$ 的转移：
+
+对于节点 $u$，设 $k=S(u)$，其子节点分别为 $v_1,v_2,\cdots,v_k$，维护 $pre[i][L],suf[i][L]$ 分别表示前 $i$ 个子节点和后 $i$ 个子节点 $h[v]$ 的和为 $L$ 的概率，初始值 $pre[0][0]=suf[k+1][0]=1$。
+
+$$
+pre[i][L]=\sum_{j=1}^{\min(h[v_i],L)}{pre[i-1][L-j]\cdot p[v_i][j]}\\
+suf[i][L]=\sum_{j=1}^{\min(h[v_i],L)}{suf[i+1][L-j]\cdot p[v_i][j]}
+$$
+
+对于节点 $v_i$
+
+$$
+q[v_i][L]=\sum_{x+y=L}{pre[i-1][x]\cdot suf[i+1][y]}
+$$
+
+对于 $p$ 的转移：
+
+$$
+p[u][l]=\sum_{v\in S(u)}\left[h[v]\ge l-1\right]{\sum_{L=S(u)-1}^{sh[u]-h[v]}{p[v][l-1]\cdot q[v][L]\cdot \frac{l-1}{L+l-1}}}
+$$
+
+##### 4. 答案统计
+
+设边集为 $E$。
+
+$$
+P(u,v)=\sum_{l=1}^{h[v]}{\sum_{L=S(u)-1}^{sh[u]-h[v]}{p[v][l]\cdot q[v][L] \cdot \frac{l}{L+l}}}
+$$
+
+最终答案 $ANS$ 为
+
+$$
+ANS=\sum_{(u,v)\in E}{P(u,v)\cdot siz[v]}
+$$
+
+#### 复杂度
+
+空间复杂度 $O(n^2)$。
+
+求 $1\sim n$ 的逆元 $O(n)$。
+
+令 $\displaystyle T(u)=\sum_{\substack{v,w\in S(u)\\ v\ne w}}{h[v]\cdot h[w]}\le \sum_{\substack{v,w\in S(u)\\ v\ne w}}{siz[v]\cdot siz[w]}$，则 $\displaystyle O\left(\sum_{i=1}^n{T(i)}\right)=O(n^2)$。
+
+对于 3 中对 $q$ 的转移，对于所有 $u$ 求出 $pre,suf$ 的总时间复杂度为 $\displaystyle O\left(\sum_{i=1}^{n}{T(i)}\right)=O(n^2)$，求出所有 $q[v][L]$ 的时间复杂度为 $O(n^3)$；对于 $p$ 的转移和最终答案的求解，总时间复杂度均为 $O\displaystyle O\left(\sum_{i=1}^n{T(i)}\right)=O(n^2)$。
+
+故总时间复杂度为 $O(n^3)$。
+
+#### 思路
+
+##### 5. 退背包优化
+
+$q[u][L]$ 所统计的对象为 $u$ 的所有兄弟节点，即 $fa[u]$ 的所有除 $u$ 外的子节点，且转移时运算可逆，尝试用退背包优化。
+
+对于节点 $u$，设 $k=S(u)$，其子节点分别为 $v_1,v_2,\cdots,v_k$。
+
+对于节点 $u$，定义 $Q[L]$ 为该节点的所有子节点 $v$ 的 $h[v]$ 之和等于 $L$ 的概率，初始值 $Q[0]=1$。
+
+枚举 $v$
+
+$$
+Q[L]\gets\sum_{t=1}^{\min(h[v],L)}{Q'[L-t]\cdot p[v][t]}
+$$
+
+退背包，记最小的 $x$ 使得 $p[v_i][x]\ne 0$
+
+$$
+oQ[0]=Q[x]\cdot p[v_i][x]^{-1}\\
+oQ[L]=\left(Q[L+x]-\sum_{j=\max(0,x+L-h[v_i])}^{L-1}{oQ[j]\cdot p[v_i][x+L-j]}\right)\cdot p[v_i][x]^{-1}
+$$
+
+求出 $Q$ 和退背包求出 $oQ$ 本质上是一次多项式乘法和除法。
+
+最后
+
+$$
+q[v_i][L]=oQ[L]
+$$
+
+其余部分不变。
+
+#### 复杂度
+
+求出对于所有非叶子节点，求出 $Q$ 和 $oQ$ 的时间复杂度均为 $\displaystyle O\left(\sum_{i=1}^n{T(i)}\right)=O(n^2)$。
+
+总时间复杂度为 $O(n^2)$。
+
+#### 易错点
+
+- 考虑贡献时使用转移简单的边贡献而不是点贡献。
+- 树上背包复杂度 $\displaystyle W(u)=\sum_{\substack{v,w\in S(u)\\ v\ne w}}{siz[v]\cdot siz[w]},O\left(\sum_{i=1}^n{W(u)}\right)=O(n^2)$，可以看作是两个不同节点只会在它们的 $\operatorname{lca}$ 处被统计一次。
+- 求 $pre,suf,Q$ 时需要排除不必要的转移，否则时间复杂度会退化成 $O(n^3)$。
