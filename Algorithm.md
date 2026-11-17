@@ -889,19 +889,19 @@ int main () {
 
 这是原图 $G$。
 
-![01](assets/Kruskal01.png)
+![](assets/Kruskal01.png)
 
 现在从小到大合并最短的一条边 $(1,2,1)$，新建一个点权为 $1$ 的结点记为 $A$。
 
-![02](assets/Kruskal02.png)
+![](assets/Kruskal02.png)
 
 再合并 $(2,3,2)$。
 
-![03](assets/Kruskal03.png)
+![](assets/Kruskal03.png)
 
 再合并 $(2,4,4)$。
 
-![04](assets/Kruskal04.png)
+![](assets/Kruskal04.png)
 
 这样就构建好了。
 
